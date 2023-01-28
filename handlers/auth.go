@@ -54,10 +54,26 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := models.User{
+		FullName: request.FullName,
 		Username: request.Username,
 		Email:    request.Email,
 		Password: password,
+		ListAsID: request.ListAsId,
+		Gender:   request.Gender,
+		Address:  request.Address,
 	}
+
+	claims := jwt.MapClaims{}
+	claims["id"] = user.ID
+	claims["exp"] = time.Now().Add(time.Hour * 2).Unix()
+
+	token, errGenerateToken := jwtToken.GenerateToken(&claims)
+	if errGenerateToken != nil {
+		log.Println(errGenerateToken)
+		fmt.Println("Unauthorized")
+		return
+	}
+
 	data, err := h.AuthRepository.Register(user)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -66,8 +82,13 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	registerResponse := authdto.RegisterResponse{
+		Username: data.Username,
+		Token:    token,
+	}
+
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Code: http.StatusOK, Data: convertResponse(data)}
+	response := dto.SuccessResult{Code: http.StatusOK, Data: registerResponse}
 	json.NewEncoder(w).Encode(response)
 }
 
