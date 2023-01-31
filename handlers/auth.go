@@ -58,9 +58,11 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 		Username: request.Username,
 		Email:    request.Email,
 		Password: password,
-		ListAsID: request.ListAsId,
-		Gender:   request.Gender,
-		Address:  request.Address,
+		ListAsID: request.ListAsID,
+		Profile: models.ProfileResponse{
+			Phone:   request.Profile.Phone,
+			Address: request.Profile.Address,
+			Gender:  request.Profile.Gender},
 	}
 
 	claims := jwt.MapClaims{}
@@ -76,6 +78,14 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 
 	data, err := h.AuthRepository.Register(user)
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	errProfile := h.AuthRepository.CreateProfile(data)
+	if errProfile != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)

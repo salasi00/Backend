@@ -1,13 +1,14 @@
 package models
 
-// type Transaction struct {
-// 	ID        int                  `json:"id" gorm:"primary_key:auto_increment"`
-// 	ProductID int                  `json:"product_id"`
-// 	Product   ProductResponse      `json:"product"`
-// 	BuyerID   int                  `json:"buyer_id"`
-// 	Buyer     UsersProfileResponse `json:"buyer"`
-// 	SellerID  int                  `json:"seller_id"`
-// 	Seller    UsersProfileResponse `json:"seller"`
-// 	Price     int                  `json:"price"`
-// 	Status    string               `json:"status" gorm:"type varchar(255)"`
-// }
+type Transaction struct {
+	ID         int                  `json:"id"`
+	CheckIn    string               `json:"checkin"`
+	CheckOut   string               `json:"checkout"`
+	HouseID    int                  `json:"houseid"`
+	House      House                `json:"house"`
+	UserID     int                  `json:"userid"`
+	User       UsersProfileResponse `json:"user"`
+	Total      string               `json:"email" gorm:"type: varchar(255)"`
+	Status     string               `json:"status" gorm:"type: varchar(255)"`
+	Attachment string               `json:"attachment" gorm:"type: varchar(255)"`
+}

@@ -5,5 +5,8 @@ import "github.com/gorilla/mux"
 func RouteInit(r *mux.Router) {
 	UserRoutes(r)
 	AuthRoutes(r)
+	ProfileRoutes(r)
+	HouseRoute(r)
+	TransactionRoute(r)
 
 }
