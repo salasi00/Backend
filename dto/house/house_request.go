@@ -13,6 +13,7 @@ type CreateHouseRequest struct {
 	Amenities string      `json:"amenities" form:"amenities" validate:"required"`
 	BedRoom   int         `json:"bedRoom" form:"bedRoom" validate:"required"`
 	Bathroom  int         `json:"bathroom" form:"bathroom" validate:"required"`
+	Image     string      `json:"image" form:"image"`
 }
 
 type UpdateHouseRequest struct {

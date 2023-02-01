@@ -11,6 +11,9 @@ type House struct {
 	Amenities string `json:"amenities" gorm:"type: varchar(255)" form:"aminities"`
 	BedRoom   int    `json:"bedRoom" gorm:"type: int" form:"bedRoom"`
 	Bathroom  int    `json:"bathroom" gorm:"type: int" form:"bathroom"`
+	Image     string `json:"image" form:"image"`
+	UserID    int    `json:"user_id"`
+	User      UsersProfileResponse
 }
 
 func (House) TableName() string {

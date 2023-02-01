@@ -84,13 +84,13 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	errProfile := h.AuthRepository.CreateProfile(data)
-	if errProfile != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
-		json.NewEncoder(w).Encode(response)
-		return
-	}
+	// errProfile := h.AuthRepository.CreateProfile(data)
+	// if errProfile != nil {
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+	// 	json.NewEncoder(w).Encode(response)
+	// 	return
+	// }
 
 	registerResponse := authdto.RegisterResponse{
 		Username: data.Username,
@@ -129,7 +129,7 @@ func (h *handlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 	isValid := bcrypt.CheckPasswordHash(request.Password, user.Password)
 	if !isValid {
 		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: "Wrong username or password"}
 		json.NewEncoder(w).Encode(response)
 		return
 	}

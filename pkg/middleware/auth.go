@@ -26,7 +26,7 @@ func Auth(next http.HandlerFunc) http.HandlerFunc {
 			json.NewEncoder(w).Encode(response)
 			return
 		}
-		token = strings.Split(token, "")[1]
+		token = strings.Split(token, " ")[1]
 		claims, err := jwtToken.DecodeToken(token)
 
 		if err != nil {

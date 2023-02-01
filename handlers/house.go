@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
 )
 
@@ -21,6 +22,8 @@ func HandlerHouse(HouseRepository repositories.HouseRepository) *handlerhouse {
 	return &handlerhouse{HouseRepository}
 }
 
+var path_file = "http://localhost:5000/uploads/"
+
 func (h *handlerhouse) FindHouses(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -28,6 +31,10 @@ func (h *handlerhouse) FindHouses(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(err.Error())
+	}
+
+	for i, p := range house {
+		house[i].Image = path_file + p.Image
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -48,6 +55,8 @@ func (h *handlerhouse) GetHouse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	house.Image = path_file + house.Image
+
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: http.StatusOK, Data: house}
 	json.NewEncoder(w).Encode(response)
@@ -55,6 +64,12 @@ func (h *handlerhouse) GetHouse(w http.ResponseWriter, r *http.Request) {
 
 func (h *handlerhouse) CreateHouse(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
+	userId := int(userInfo["id"].(float64))
+
+	dataContext := r.Context().Value("dataFile")
+	filename := dataContext.(string)
 
 	cityid, _ := strconv.Atoi(r.FormValue("cityid"))
 	price, _ := strconv.Atoi(r.FormValue("price"))
@@ -89,6 +104,8 @@ func (h *handlerhouse) CreateHouse(w http.ResponseWriter, r *http.Request) {
 		Amenities: request.Amenities,
 		BedRoom:   request.BedRoom,
 		Bathroom:  request.Bathroom,
+		Image:     filename,
+		UserID:    userId,
 	}
 
 	data, err := h.HouseRepository.CreateHouse(house)

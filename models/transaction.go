@@ -12,3 +12,7 @@ type Transaction struct {
 	Status     string               `json:"status" gorm:"type: varchar(255)"`
 	Attachment string               `json:"attachment" gorm:"type: varchar(255)"`
 }
+
+func (Transaction) TableName() string {
+	return "transaction"
+}

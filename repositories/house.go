@@ -20,20 +20,20 @@ func RepositoryHouse(db *gorm.DB) *repository {
 
 func (r *repository) FindHouses() ([]models.House, error) {
 	var house []models.House
-	err := r.db.Preload("City").Find(&house).Error
+	err := r.db.Preload("User").Preload("City").Find(&house).Error
 
 	return house, err
 }
 
 func (r *repository) GetHouse(ID int) (models.House, error) {
 	var house models.House
-	err := r.db.Preload("City").First(&house, ID).Error
+	err := r.db.Preload("User").Preload("City").First(&house, ID).Error
 
 	return house, err
 }
 
 func (r *repository) CreateHouse(house models.House) (models.House, error) {
-	err := r.db.Preload("City").Create(&house).Error
+	err := r.db.Preload("User").Preload("City").Create(&house).Error
 
 	return house, err
 }

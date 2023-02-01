@@ -5,11 +5,6 @@ type ListAs struct {
 	Name string `json:"name"`
 }
 
-type ListAsResponse struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-}
-
 func (ListAs) TableName() string {
 	return "list_as"
 }
